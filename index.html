@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Emotions</title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <form>
+        <label for="fname">Write a phrase you want to grasp:</label><br>
+        <input type="text" id="fname" name="fname"><br>
+        <input type="button" value="Submit" onclick="submitForm()" />
+        
+    </form>
+    <div id="result">
+    </div>
+    <script>
+    const emotionMap = {
+        "admiration": "😍",
+        "amusement": "😄",
+        "anger": "😡",
+        "annoyance": "😒",
+        "approval": "👍",
+        "caring": "❤️",
+        "confusion": "😕",
+        "curiosity": "🤔",
+        "desire": "😏",
+        "disappointment": "😞",
+        "disapproval": "👎",
+        "disgust": "🤢",
+        "embarrassment": "😳",
+        "excitement": "😃",
+        "fear": "😱",
+        "gratitude": "🙏",
+        "grief": "😢",
+        "joy": "😂",
+        "love": "❤️",
+        "nervousness": "😬",
+        "optimism": "😊",
+        "pride": "🏆",
+        "realization": "😲",
+        "relief": "😅",
+        "remorse": "😔",
+        "sadness": "😢",
+        "surprise": "😮",
+        "neutral": "😐"
+    };
+    function submitForm(){
+        var sentence = document.getElementById("fname").value;
+        console.log(sentence)
+        fetch("/submit", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }, 
+            body: JSON.stringify({text: sentence})
+        }).then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (/[\.\!\?]$/.test(sentence)) {
+                    sentence += " ";
+                }
+                const symbolEmojies = sentence.match(/(?:\.+ |! |\? )/g);
+                console.log(symbolEmojies);
+                var sentences = sentence.split(/(?:\.+ |! |\? )/g);
+                console.log(sentences);
+                const emotionsArray = [];
+                document.getElementById("result").innerHTML = "";
+                for (var i = 0; i < data.predictions.length; i++) {
+                    console.log(data.predictions[i][0].label);
+                    const emotionsString = data.predictions[i][0].label;
+                    emotionsArray.push(emotionsString);
+                    const emoji = emotionMap[emotionsString] || "❓";
+                    var emojiOut = emoji;
+                    var dotCount = 0;
+
+                    if (symbolEmojies && symbolEmojies[i]) {
+                        for (var j = 0; j < symbolEmojies[i].length; j++) {
+                            if (symbolEmojies[i][j] == "!") {
+                                emojiOut += "❗️";
+                            } else if (symbolEmojies[i][j] == "?") {
+                                emojiOut += "❓";
+                            } else if (symbolEmojies[i][j] == ".") {
+                                dotCount++;
+                                if (dotCount >= 3) {
+                                    emojiOut += "😐";
+                                } else {
+                                    emojiOut = emojiOut;
+                                }
+                            }
+                        }
+                    }else {
+                                emojiOut = emojiOut;
+                            }
+
+                    document.getElementById("result").innerHTML += sentences[i] + emojiOut + " ";
+                }
+                })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+    </script>
+</body>
+</html>
