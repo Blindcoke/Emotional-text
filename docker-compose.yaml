@@ -1,12 +1,12 @@
 version: '3'
 services:
-  app:
+  ai:
     container_name: emotions-app
     restart: always
-    build: .
+    build: 
+      context: ./ai
+      dockerfile: ./Dockerfile
     working_dir: /app
-    ports:
-      - 80:80
     deploy:
       resources:
         reservations:
@@ -14,3 +14,27 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
+    ports:
+      - "8000:80"
+    networks:
+      app-network:
+        ipv4_address: 192.168.1.5 
+  web:
+    build:
+      context: ./web
+      dockerfile: ./Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      app-network:
+        ipv4_address: 192.168.1.4
+
+networks:
+  app-network:
+    external: true
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.1.0/24
+          gateway: 192.168.1.1
