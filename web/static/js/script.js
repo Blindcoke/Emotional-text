@@ -97,14 +97,13 @@ function record() {
     .then(stream => {
         mediaRecorder = new MediaRecorder(stream);
         if (document.getElementById("realTimeCheckbox").checked) {
-            mediaRecorder.start(timeslice = 2000);
+            mediaRecorder.start(timeslice = 1500);
             const audioChunks = [];
             mediaRecorder.addEventListener("dataavailable", event => {
                 audioChunks.push(event.data);
-                console.log(audioChunks);
                 const partialAudioBlob = new Blob(audioChunks, { type: "audio/webm" });
                 submitAudio(partialAudioBlob);
-                // audioChunks.length = 0;
+
             });
         } else {
             mediaRecorder.start();
@@ -116,7 +115,9 @@ function record() {
                 stream.getTracks().forEach(track => track.stop());
                 const audioBlob = new Blob(audioChunks, {"type": "audio/webm"});
                 submitAudio(audioBlob);
-        });}
+            });
+        }
+        
     });
 }
 
@@ -134,7 +135,7 @@ function submitAudio(audioBlob) {
         body: formData,
         headers: { }
     };
-    fetch('http://127.0.0.1:80/submit_voice', transcribeOptions)
+    fetch('http://127.0.0.1/submit_voice', transcribeOptions)
     .then(response => response.json())
     .then(data => {
         buttonEnabled = true;
@@ -174,36 +175,32 @@ function genereateAnswer(data) {
         emotionsArray.push(emotionsString);
         const emoji = emotionMap[emotionsString] || ".";
         var emojiOut = emoji;
-        var dotCount = 0;
 
-        if (data.symbol_emojies && Array.isArray(data.symbol_emojies[index])) {
-            data.symbol_emojies[index].forEach((s) => {
-                if (s== "!") {
+        if (data.symbol_emojies && data.symbol_emojies[index]) {
+            data.symbol_emojies[index] = data.symbol_emojies[index].trim();
+            console.log(data.symbol_emojies[index]);
+                if (data.symbol_emojies[index]== "!") {
                     if (emojiOut == ".") {
                         emojiOut = "❗️";
                     } else {
                         emojiOut += "❗️";
                     }
-                } else if (s == "?") {
+                } else if (data.symbol_emojies[index] == "?") {
                     if (emojiOut == ".") {
                         emojiOut = "❓";
                     } else {
                         emojiOut += "❓";
                     }
-                } else if (s == ".") {
-                    dotCount++;
-                    if (dotCount >= 3) {
+                } else if (data.symbol_emojies[index] == "...") {
                         emojiOut += "😐";
-                    } else {
-                        emojiOut = emojiOut;
-                    }
-                }
-            });
-        } else {
-            emojiOut = emojiOut;
-        }
 
-        document.getElementById("result").innerHTML += data.sentences[index] + emojiOut + " ";
+                }
+
+        } 
+
+        document.getElementById("result").innerHTML += data.sentences[index] + emojiOut + " "; 
+        // mediaRecorder.pause();
+        // mediaRecorder.resume();
     });
 }
 

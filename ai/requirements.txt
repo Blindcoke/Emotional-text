@@ -1,3 +1,7 @@
 fastapi==0.109.0
 transformers==4.36.2
 uvicorn==0.26.0
+python-multipart
+faster-whisper==0.10.1
+onnxruntime-gpu==1.16
+optimum[onnxruntime]

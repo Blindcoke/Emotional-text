@@ -19,6 +19,7 @@ services:
     networks:
       app-network:
         ipv4_address: 192.168.1.5 
+
   web:
     build:
       context: ./web
