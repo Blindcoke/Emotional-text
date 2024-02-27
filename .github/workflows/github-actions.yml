@@ -18,7 +18,7 @@ jobs:
         run: python -c "import sys; print(sys.version)"
 
       - name: Copy model folder
-        run: cp -r ../ai/models ./ai
+        run: cd ../ai/
 
       - name: Install dependencies
         run: |
