@@ -21,12 +21,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-model = WhisperModel("./models/w-base/", device="cuda")
+model = WhisperModel("/work/emotions/ai/models/w-base/", device="cuda")
 # classifier = pipeline(task="text-classification", model="SamLowe/roberta-base-go_emotions", top_k=None, device=torch.cuda.set_device(0))
-classifier_directory = "./models/onnx/roberta/"
+classifier_directory = "/work/emotions/ai/models/onnx/roberta/"
 # roberta = ORTModelForSequenceClassification.from_pretrained(classifier_directory, file_name="model.onnx")
 config = None
-with open("./models/onnx/roberta/config.json", "r") as f:
+with open("/work/emotions/ai/models/onnx/roberta/config.json", "r") as f:
     config = json.load(f)
 # roberta = ORTModelForSequenceClassification(config=PretrainedConfig(**config), model=InferenceSession('./models/onnx/roberta/model.onnx', providers=['CUDAExecutionProvider']))
 trt_ep_options = {
@@ -35,11 +35,11 @@ trt_ep_options = {
     "trt_profile_max_shapes": "input_ids:1x512,attention_mask:1x512",
     "trt_profile_opt_shapes": "input_ids:1x512,attention_mask:1x512",
 }
-roberta = ORTModelForSequenceClassification(config=PretrainedConfig(**config), model=InferenceSession('./models/onnx/roberta/model.onnx', providers=[("TensorrtExecutionProvider", trt_ep_options)]))
+roberta = ORTModelForSequenceClassification(config=PretrainedConfig(**config), model=InferenceSession('/work/emotions/ai/models/onnx/roberta/model.onnx', providers=[("TensorrtExecutionProvider", trt_ep_options)]))
 classifier = pipeline(
     "text-classification",
     model=roberta,
-    tokenizer = RobertaTokenizer.from_pretrained("./models/roberta-base/"),
+    tokenizer = RobertaTokenizer.from_pretrained("/work/emotions/ai/models/roberta-base/"),
     top_k=None,
 )
 
@@ -47,7 +47,7 @@ classifier = pipeline(
 
 class InputSentence(BaseModel):
     text: str
-    # audio_file: UploadFile 
+
     
 
 

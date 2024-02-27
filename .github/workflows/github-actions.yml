@@ -17,23 +17,23 @@ jobs:
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
 
-      - name: Set up DVC credentials
-        env:
-          DVC_CREDENTIALS_FILE: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
-        run: |
-          echo "GDRIVE_CREDENTIALS_DATA" > /tmp/dvc_credentials.txt
-          export DVC_USER_ID=$(awk -F '=' '/user_id/ {print $2}' /tmp/dvc_credentials.txt)
-          export DVC_SECRET_KEY=$(awk -F '=' '/secret_key/ {print $2}' /tmp/dvc_credentials.txt)
+      # - name: Set up DVC credentials
+      #   env:
+      #     DVC_CREDENTIALS_FILE: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
+      #   run: |
+      #     echo "GDRIVE_CREDENTIALS_DATA" > /tmp/dvc_credentials.txt
+      #     export DVC_USER_ID=$(awk -F '=' '/user_id/ {print $2}' /tmp/dvc_credentials.txt)
+      #     export DVC_SECRET_KEY=$(awk -F '=' '/secret_key/ {print $2}' /tmp/dvc_credentials.txt)
 
-      - name: Set up DVC
-        run: |
-          pip install dvc dvc-gdrive
-          dvc remote modify myremote user $DVC_USER_ID
-          dvc remote modify myremote secret $DVC_SECRET_KEY
+      # - name: Set up DVC
+      #   run: |
+      #     pip install dvc dvc-gdrive
+      #     dvc remote modify myremote user $DVC_USER_ID
+      #     dvc remote modify myremote secret $DVC_SECRET_KEY
 
-      - name: Pull data from DVC
-        run: |
-          dvc pull -r myremote 
+      # - name: Pull data from DVC
+      #   run: |
+      #     dvc pull -r myremote 
 
 
 
@@ -45,7 +45,7 @@ jobs:
 
   
       - name: Run tests
-        working-directory: ./ai
+        # working-directory: ./ai
         run: pytest
 
       
