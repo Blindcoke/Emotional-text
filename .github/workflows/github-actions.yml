@@ -17,11 +17,26 @@ jobs:
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
 
-      - name: Configure DVC
+      - name: Set up DVC credentials
+        env:
+          DVC_CREDENTIALS_FILE: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
         run: |
-          ip addr
+          echo "GDRIVE_CREDENTIALS_DATA" > /tmp/dvc_credentials.txt
+          export DVC_USER_ID=$(awk -F '=' '/user_id/ {print $2}' /tmp/dvc_credentials.txt)
+          export DVC_SECRET_KEY=$(awk -F '=' '/secret_key/ {print $2}' /tmp/dvc_credentials.txt)
+
+      - name: Set up DVC
+        run: |
           pip install dvc dvc-gdrive
-          dvc pull ai/models
+          dvc remote add -d myremote gdrive://1D0bcJqIdO1bhY3dsBD36w5_1kQkEfX02
+          dvc remote modify myremote user $DVC_USER_ID
+          dvc remote modify myremote secret $DVC_SECRET_KEY
+
+      - name: Pull data from DVC
+        run: |
+          dvc pull -r myremote 
+
+
 
       - name: Install dependencies
         run: |
