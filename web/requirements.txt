@@ -3,3 +3,5 @@ uvicorn==0.26.0
 requests==2.26.0
 python-multipart
 pytest==8.0.2
+dvc-gdrive==3.0.1
+dvc==3.47.0
