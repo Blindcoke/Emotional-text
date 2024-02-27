@@ -19,11 +19,13 @@ jobs:
 
       - name: Configure DVC
         run: |
+          ip addr
           pip install dvc dvc-gdrive
           dvc pull ai/models
 
       - name: Install dependencies
         run: |
+        
           pip install -r ./ai/requirements.txt
           pip install -r ./web/requirements.txt
 
