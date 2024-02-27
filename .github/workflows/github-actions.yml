@@ -17,13 +17,14 @@ jobs:
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
 
+      - name: Copy model folder
+        run: cp -r ../ai/models ./ai
+
       - name: Install dependencies
         run: |
           pip install -r ./ai/requirements.txt
           pip install -r ./web/requirements.txt
 
-      - name: Copy model folder
-        run: cp -r ./ai/models ./ai
   
       - name: Run tests
         working-directory: ./ai
