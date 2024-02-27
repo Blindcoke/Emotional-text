@@ -19,7 +19,7 @@ jobs:
 
       - name: Configure DVC
         run: |
-          pip install dvc
+          pip install dvc dvc-gdrive
           dvc pull ai/models
 
       - name: Install dependencies
