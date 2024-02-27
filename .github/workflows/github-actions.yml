@@ -17,10 +17,11 @@ jobs:
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
 
-      - name: Copy model folder
-        run: |
-          ls -l ../../ai/models
-          cp -r ../../ai/models ./ai
+      - name: Archive models directory
+        uses: actions/upload-artifact@v2
+        with:
+          name: models
+          path: ./ai/models
 
       - name: Install dependencies
         run: |
