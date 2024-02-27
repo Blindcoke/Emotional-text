@@ -5,3 +5,4 @@ python-multipart
 faster-whisper==0.10.1
 onnxruntime-gpu==1.16
 optimum[onnxruntime]
+pytest==8.0.2
