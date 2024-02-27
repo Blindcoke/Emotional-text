@@ -22,6 +22,11 @@ jobs:
           pip install -r ./ai/requirements.txt
           pip install -r ./web/requirements.txt
 
+      - name: Copy model folder
+        run: cp -r ./ai/models ./ai
+  
       - name: Run tests
+        working-directory: ./ai
         run: pytest
+
       
