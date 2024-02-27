@@ -28,7 +28,6 @@ jobs:
       - name: Set up DVC
         run: |
           pip install dvc dvc-gdrive
-          dvc remote add -d myremote gdrive://1D0bcJqIdO1bhY3dsBD36w5_1kQkEfX02
           dvc remote modify myremote user $DVC_USER_ID
           dvc remote modify myremote secret $DVC_SECRET_KEY
 
