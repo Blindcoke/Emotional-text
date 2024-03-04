@@ -19,17 +19,7 @@ jobs:
       #   run: |
       #     pip install black
       #     black . 
-      # - uses: iterative/setup-dvc@v1
-      # - name: Set up DVC credentials
-      #   env:
-      #     DVC_CREDENTIALS_FILE: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
-      #   run: |
-      #     echo "GDRIVE_CREDENTIALS_DATA" > /tmp/dvc_credentials.txt
-      #     export DVC_USER_ID=$(awk -F '=' '/user_id/ {print $2}' /tmp/dvc_credentials.txt)
-      #     export DVC_SECRET_KEY=$(awk -F '=' '/secret_key/ {print $2}' /tmp/dvc_credentials.txt)
-      
-      # - name: Install SSH key
-      #   run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
@@ -44,7 +34,7 @@ jobs:
           pip install dvc dvc-gdrive
 
 
-      - name: Get Google Drive Service Account JSON
+      - name: Set up Gdrive
         env:
           GDRIVE_CREDENTIALS: ${{ secrets.GDRIVE_CREDENTIALS }}
         run: echo "$GDRIVE_CREDENTIALS" > gdrive_credentials.json
@@ -62,7 +52,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/ai/requirements.txt') }}-${{ hashFiles('**/web/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/ai/requirements.txt') }} 
           restore-keys: |
             ${{ runner.os }}-pip-
 
@@ -83,7 +73,7 @@ jobs:
       - name: Start FastAPI server for 'web' application
         run: |
           nohup uvicorn web:app --port 8080 --reload &
-          while ! nc -z localhost 80; do sleep 1; done
+          while ! nc -z localhost 8080; do sleep 1; done
         working-directory: ./web
   
       - name: Run tests
