@@ -75,13 +75,13 @@ jobs:
 
       - name: Start FastAPI server for 'ai' application
         run: |
-            uvicorn main:app --reload
+          nohup uvicorn main:app --reload
         working-directory: ./ai
     
 
       - name: Start FastAPI server for 'web' application
         run: |
-            uvicorn web:app --port 80 --reload 
+          nohup uvicorn web:app --port 80 --reload 
         working-directory: ./web
   
       - name: Run tests

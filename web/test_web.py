@@ -25,7 +25,7 @@ def test_submit(client):
     assert response.json()["symbol_emojies"] == ["! ", "? "]  
 
 def test_submit_audio(client):
-    response = client.post("/submit_voice", files={"audioFile": open("/work/emotions/ai/audio3.mp3", "rb")})
+    response = client.post("/submit_voice", files={"audioFile": open("./ai/audio3.mp3", "rb")})
     assert response.status_code == 200
     predictions = []
     for sublist in response.json()['predictions']:
