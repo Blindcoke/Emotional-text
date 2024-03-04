@@ -60,6 +60,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           pip install -r ./ai/requirements.txt
+          
         
       - name: Install Web dependencies
         run: |
