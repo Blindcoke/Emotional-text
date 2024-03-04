@@ -57,7 +57,7 @@ jobs:
             ${{ runner.os }}-pip-
 
       - name: Install AI dependencies
-        if: steps.cache-ai.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
           pip install -r ./ai/requirements.txt
         
