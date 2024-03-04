@@ -67,21 +67,21 @@ jobs:
             ${{ runner.os }}-pip-
 
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
-        
           pip install -r ./ai/requirements.txt
           pip install -r ./web/requirements.txt
 
 
       - name: Start FastAPI server for 'ai' application
         run: |
-          nohup uvicorn main:app --reload
+          nohup uvicorn main:app --reload > /dev/null 2>&1 &
         working-directory: ./ai
     
 
       - name: Start FastAPI server for 'web' application
         run: |
-          nohup uvicorn web:app --port 80 --reload 
+          nohup uvicorn web:app --port 80 --reload > /dev/null 2>&1 &
         working-directory: ./web
   
       - name: Run tests
