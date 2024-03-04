@@ -21,7 +21,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-model = WhisperModel("./models/w-base/", device="cuda")
+model = WhisperModel("./models/w-base/")
 # classifier = pipeline(task="text-classification", model="SamLowe/roberta-base-go_emotions", top_k=None, device=torch.cuda.set_device(0))
 classifier_directory = "./models/onnx/roberta/"
 # roberta = ORTModelForSequenceClassification.from_pretrained(classifier_directory, file_name="model.onnx")

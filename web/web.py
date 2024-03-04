@@ -5,7 +5,6 @@ from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.base import BaseHTTPMiddleware
 import os
-from pathlib import Path
 from fastapi.staticfiles import StaticFiles
 app = FastAPI()
 script_dir = os.path.dirname(__file__)
