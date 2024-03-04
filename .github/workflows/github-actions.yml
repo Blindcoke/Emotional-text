@@ -14,26 +14,31 @@ jobs:
         with:
           python-version: '3.11'
           architecture: 'x64'
-      - name: Display Python version
-        run: python -c "import sys; print(sys.version)"
             
-      - name: Run Black
-        run: |
-          pip install black
-          black . 
-      - uses: iterative/setup-dvc@v1
-      - name: Set up DVC credentials
-        env:
-          DVC_CREDENTIALS_FILE: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
-        run: |
-          echo "GDRIVE_CREDENTIALS_DATA" > /tmp/dvc_credentials.txt
-          export DVC_USER_ID=$(awk -F '=' '/user_id/ {print $2}' /tmp/dvc_credentials.txt)
-          export DVC_SECRET_KEY=$(awk -F '=' '/secret_key/ {print $2}' /tmp/dvc_credentials.txt)
+      # - name: Run Black
+      #   run: |
+      #     pip install black
+      #     black . 
+      # - uses: iterative/setup-dvc@v1
+      # - name: Set up DVC credentials
+      #   env:
+      #     DVC_CREDENTIALS_FILE: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
+      #   run: |
+      #     echo "GDRIVE_CREDENTIALS_DATA" > /tmp/dvc_credentials.txt
+      #     export DVC_USER_ID=$(awk -F '=' '/user_id/ {print $2}' /tmp/dvc_credentials.txt)
+      #     export DVC_SECRET_KEY=$(awk -F '=' '/secret_key/ {print $2}' /tmp/dvc_credentials.txt)
+      
+      - name: Install SSH key
+        run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+
+      - name: Deploy code
+        run: ssh -i ~/.ssh/id_rsa ubuntu@3.91.2.203 "git pull origin main"
 
       - name: Set up DVC
         run: |
           pip install dvc dvc-gdrive
           dvc remote modify myremote secret $DVC_SECRET_KEY
+
 
       - name: Pull data from DVC
         run: |
@@ -50,5 +55,8 @@ jobs:
   
       - name: Run tests
         run: pytest
+
+      - name: cleanup
+        run: rm -rf ~/.ssh
 
       
