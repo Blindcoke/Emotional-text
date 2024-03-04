@@ -28,11 +28,11 @@ jobs:
       #     export DVC_USER_ID=$(awk -F '=' '/user_id/ {print $2}' /tmp/dvc_credentials.txt)
       #     export DVC_SECRET_KEY=$(awk -F '=' '/secret_key/ {print $2}' /tmp/dvc_credentials.txt)
       
-      - name: Install SSH key
-        run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+      # - name: Install SSH key
+      #   run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
 
       - name: Deploy code
-        run: ssh -i ~/.ssh/id_rsa ubuntu@3.91.2.203 "git pull origin main"
+        run: ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ubuntu@3.91.2.203 "git pull origin main"
 
       - name: Set up DVC
         run: |
