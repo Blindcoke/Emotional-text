@@ -71,7 +71,6 @@ jobs:
           nohup uvicorn main:app --reload &
           while ! nc -z localhost 8000; do sleep 1; done
         working-directory: ./ai
-    
 
       - name: Start FastAPI server for 'web' application
         run: |
