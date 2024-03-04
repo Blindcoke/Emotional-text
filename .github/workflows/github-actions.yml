@@ -37,7 +37,7 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
 
       - name: Deploy code
-        run: ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@3.91.2.203 "git pull origin main"
+        run: ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@3.91.2.203 "cd ${{ secrets.WORK_DIR }}  && git pull origin main"
 
       - name: Set up DVC
         run: |
