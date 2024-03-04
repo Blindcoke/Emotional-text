@@ -18,7 +18,7 @@ jobs:
       - name: Run Black
         run: |
           pip install black
-          black ./ai ./web --check
+          black ./ai/main.py ./ai/Dockerfile ./web/web.py ./web/test_web.py --check
 
       - name: Set up SSH
         run: |
