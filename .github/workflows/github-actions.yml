@@ -47,6 +47,8 @@ jobs:
 
       - name: Pull data from DVC
         run: |
+          dvc remote modify myremote --local \
+                      gdrive_service_account_json_file_path ${{ secrets.GDRIVE_CREDENTIALS }}
           dvc pull -r myremote 
 
 
