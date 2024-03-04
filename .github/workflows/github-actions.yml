@@ -30,9 +30,14 @@ jobs:
       
       # - name: Install SSH key
       #   run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          
       - name: Deploy code
-        run: ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ubuntu@3.91.2.203 "git pull origin main"
+        run: ssh -i ~/.ssh/id_rsa ubuntu@3.91.2.203 "git pull origin main"
 
       - name: Set up DVC
         run: |
