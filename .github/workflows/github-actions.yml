@@ -62,7 +62,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('ai/requirements.txt') }}-${{ hashFiles('web/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/ai/requirements.txt') }}-${{ hashFiles('**/web/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
 
@@ -75,13 +75,15 @@ jobs:
 
       - name: Start FastAPI server for 'ai' application
         run: |
-          nohup uvicorn main:app --reload > /dev/null 2>&1 &
+          nohup uvicorn main:app --reload &
+          while ! nc -z localhost 8000; do sleep 1; done
         working-directory: ./ai
     
 
       - name: Start FastAPI server for 'web' application
         run: |
-          nohup uvicorn web:app --port 80 --reload > /dev/null 2>&1 &
+          nohup uvicorn web:app --port 80 --reload &
+          while ! nc -z localhost 80; do sleep 1; done
         working-directory: ./web
   
       - name: Run tests
