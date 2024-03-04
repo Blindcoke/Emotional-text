@@ -35,11 +35,11 @@ trt_ep_options = {
     "trt_profile_max_shapes": "input_ids:1x512,attention_mask:1x512",
     "trt_profile_opt_shapes": "input_ids:1x512,attention_mask:1x512",
 }
-roberta = ORTModelForSequenceClassification(config=PretrainedConfig(**config), model=InferenceSession('/work/emotions/ai/models/onnx/roberta/model.onnx', providers=[("TensorrtExecutionProvider", trt_ep_options)]))
+roberta = ORTModelForSequenceClassification(config=PretrainedConfig(**config), model=InferenceSession('./models/onnx/roberta/model.onnx', providers=[("TensorrtExecutionProvider", trt_ep_options)]))
 classifier = pipeline(
     "text-classification",
     model=roberta,
-    tokenizer = RobertaTokenizer.from_pretrained("/work/emotions/ai/models/roberta-base/"),
+    tokenizer = RobertaTokenizer.from_pretrained("./models/roberta-base/"),
     top_k=None,
 )
 
