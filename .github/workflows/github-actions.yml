@@ -15,10 +15,10 @@ jobs:
           python-version: '3.11'
           architecture: 'x64'
             
-      # - name: Run Black
-      #   run: |
-      #     pip install black
-      #     black . 
+      - name: Run Black
+        run: |
+          pip install black
+          black ./ai ./web --check
 
       - name: Set up SSH
         run: |
@@ -49,17 +49,20 @@ jobs:
           dvc pull -r myremote   
 
       - name: Cache pip packages
-        uses: actions/cache@v2
+        uses: actions/cache@v1
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/ai/requirements.txt') }} 
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
+      - name: Install AI dependencies
+        if: steps.cache-ai.outputs.cache-hit != 'true'
         run: |
           pip install -r ./ai/requirements.txt
+        
+      - name: Install Web dependencies
+        run: |
           pip install -r ./web/requirements.txt
 
 
