@@ -16,6 +16,7 @@ def test_submit(client):
     response = client.post("/submit", json={"text": "Hello World! How are you?"})
     assert response.status_code == 200
     predictions = []
+    print(predictions)
     for sublist in response.json()['predictions']:
             predictions.append(sublist[0]['label'])
     

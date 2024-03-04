@@ -66,6 +66,17 @@ jobs:
           pip install -r ./ai/requirements.txt
           pip install -r ./web/requirements.txt
 
+
+      - name: Start FastAPI server for 'ai' application
+        run: |
+            uvicorn main:app --reload
+        working-directory: ./ai
+    
+
+      - name: Start FastAPI server for 'web' application
+        run: |
+            uvicorn web:app --port 80 --reload 
+        working-directory: ./web
   
       - name: Run tests
         run: pytest

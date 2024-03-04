@@ -5,9 +5,12 @@ from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.base import BaseHTTPMiddleware
 import os
+from pathlib import Path
+from fastapi.staticfiles import StaticFiles
 app = FastAPI()
-current_directory = os.path.abspath(os.path.dirname(__file__))
-app.mount("/static", StaticFiles(directory=current_directory, html=True), name="static")
+script_dir = os.path.dirname(__file__)
+st_abs_file_path = os.path.join(script_dir, "static/")
+app.mount("/static", StaticFiles(directory=st_abs_file_path), name="static")
 
 @app.get("/")
 async def read_root():
