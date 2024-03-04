@@ -51,9 +51,10 @@ jobs:
           GDRIVE_CREDENTIALS: ${{ secrets.GDRIVE_CREDENTIALS }}
         run: echo "$GDRIVE_CREDENTIALS" > gdrive_credentials.json
     
-        # Use the secret in DVC command
       - name: Configure DVC Remote
-        run: dvc remote modify myremote --local gdrive_service_account_json_file_path gdrive_credentials.json
+        run: | 
+          dvc remote modify myremote gdrive_use_service_account true
+          dvc remote modify myremote --local gdrive_service_account_json_file_path gdrive_credentials.json
 
       - name: Pull data from DVC
         run: |
