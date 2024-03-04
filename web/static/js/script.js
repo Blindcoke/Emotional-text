@@ -45,7 +45,7 @@ const emotionMap = {
 };
 function submitForm(){
     sentence = document.getElementById("fname").value;
-    fetch('http://127.0.0.1/submit', {
+    fetch('http://127.0.0.1:8080/submit', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -135,7 +135,7 @@ function submitAudio(audioBlob) {
         body: formData,
         headers: { }
     };
-    fetch('http://127.0.0.1/submit_voice', transcribeOptions)
+    fetch('http://127.0.0.1:8080/submit_voice', transcribeOptions)
     .then(response => response.json())
     .then(data => {
         buttonEnabled = true;
