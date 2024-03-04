@@ -21,12 +21,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-model = WhisperModel("/work/emotions/ai/models/w-base/", device="cuda")
+model = WhisperModel("./models/w-base/", device="cuda")
 # classifier = pipeline(task="text-classification", model="SamLowe/roberta-base-go_emotions", top_k=None, device=torch.cuda.set_device(0))
-classifier_directory = "/work/emotions/ai/models/onnx/roberta/"
+classifier_directory = "./models/onnx/roberta/"
 # roberta = ORTModelForSequenceClassification.from_pretrained(classifier_directory, file_name="model.onnx")
 config = None
-with open("/work/emotions/ai/models/onnx/roberta/config.json", "r") as f:
+with open("./models/onnx/roberta/config.json", "r") as f:
     config = json.load(f)
 # roberta = ORTModelForSequenceClassification(config=PretrainedConfig(**config), model=InferenceSession('./models/onnx/roberta/model.onnx', providers=['CUDAExecutionProvider']))
 trt_ep_options = {
