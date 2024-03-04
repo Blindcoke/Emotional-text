@@ -60,7 +60,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           pip install -r ./ai/requirements.txt
-          
+
         
       - name: Install Web dependencies
         run: |
@@ -73,6 +73,7 @@ jobs:
           while ! nc -z localhost 8000; do sleep 1; done
         working-directory: ./ai
 
+        
       - name: Start FastAPI server for 'web' application
         run: |
           nohup uvicorn web:app --port 8080 --reload &
