@@ -34,6 +34,7 @@ jobs:
       #     restore-keys: |
       #       ${{ runner.os }}-pip-
 
+        
       - name: Connect ssh
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@3.91.2.203 '
@@ -41,7 +42,6 @@ jobs:
           echo "$GDRIVE_CREDENTIALS" > gdrive_credentials.json
           pip install -r ./ai/requirements.txt
           pip install -r ./web/requirements.txt
-          pip install dvc dvc-gdrive
           dvc remote modify myremote gdrive_use_service_account true
           dvc remote modify myremote --local gdrive_service_account_json_file_path gdrive_credentials.json
           dvc pull -r myremote
