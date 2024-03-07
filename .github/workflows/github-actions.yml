@@ -27,7 +27,9 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
 
       - name: Connect ssh
-        run: ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@3.91.2.203 "cd ${{ secrets.WORK_DIR }}  && git pull origin main"
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@3.91.2.203 
+          cd ${{ secrets.WORK_DIR }}  && git pull origin main
 
       - name: Check IP
         run: hostname -i
@@ -37,10 +39,6 @@ jobs:
           GDRIVE_CREDENTIALS: ${{ secrets.GDRIVE_CREDENTIALS }}
         run: echo "$GDRIVE_CREDENTIALS" > gdrive_credentials.json
     
-      - name: Configure DVC Remote
-        run: | 
-          dvc remote modify myremote gdrive_use_service_account true
-          dvc remote modify myremote --local gdrive_service_account_json_file_path gdrive_credentials.json
  
 
       - name: Cache pip packages
@@ -65,7 +63,11 @@ jobs:
       - name: Set up DVC
         run: |
           pip install dvc dvc-gdrive
-        
+      
+      - name: Configure DVC Remote
+        run: | 
+          dvc remote modify myremote gdrive_use_service_account true
+          dvc remote modify myremote --local gdrive_service_account_json_file_path gdrive_credentials.json
 
       - name: Pull data from DVC
         run: |
