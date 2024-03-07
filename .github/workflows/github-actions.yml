@@ -45,7 +45,7 @@ jobs:
           dvc remote modify myremote gdrive_use_service_account true
           dvc remote modify myremote --local gdrive_service_account_json_file_path gdrive_credentials.json
           dvc pull -r myremote
-          cd /ai
+          cd ai
           uvicorn main:app --reload &
           until $(curl --output /dev/null --silent --head --fail http://localhost:8000); do
           sleep 1
