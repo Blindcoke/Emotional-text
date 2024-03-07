@@ -46,11 +46,15 @@ jobs:
           dvc remote modify myremote --local gdrive_service_account_json_file_path gdrive_credentials.json
           dvc pull -r myremote
           cd /ai
-          nohup uvicorn main:app --reload &
-          while ! nc -z localhost 8000; do sleep 1; done
+          uvicorn main:app --reload &
+          until $(curl --output /dev/null --silent --head --fail http://localhost:8000); do
+          sleep 1
+          done
           cd ../web
-          nohup uvicorn web:app --port 8080 --reload &
-          while ! nc -z localhost 8080; do sleep 1; done
+          uvicorn web:app --port 8080 --reload &
+          until $(curl --output /dev/null --silent --head --fail http://localhost:8080); do
+            sleep 1
+          done
           pytest'
 
 
