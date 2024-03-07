@@ -34,10 +34,10 @@ jobs:
       #     restore-keys: |
       #       ${{ runner.os }}-pip-
 
-        
+
       - name: Connect ssh
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@3.91.2.203 '
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@52.3.230.197 '
           cd ${{ secrets.WORK_DIR }}  && git pull origin main
           echo "$GDRIVE_CREDENTIALS" > gdrive_credentials.json
           pip install -r ./ai/requirements.txt
