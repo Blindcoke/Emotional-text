@@ -41,7 +41,7 @@ jobs:
             GDRIVE_CREDENTIALS: ${{ secrets.GDRIVE_CREDENTIALS }}
         run: |
           echo "$GDRIVE_CREDENTIALS" > gdrive_credentials.json
-          scp -o StrictHostKeyChecking=no -i gdrive_credentials.json ~/.ssh/id_rsa ubuntu@52.3.230.197:~/repositories/Emotional-text 
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa gdrive_credentials.json ubuntu@52.3.230.197:~/repositories/Emotional-text 
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@52.3.230.197 '
           cd ${{ secrets.WORK_DIR }}  && git pull origin main
           export PATH='$PATH:/home/ubuntu/.local/bin'
