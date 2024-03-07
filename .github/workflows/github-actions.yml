@@ -29,10 +29,8 @@ jobs:
       - name: Connect ssh
         run: ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@3.91.2.203 "cd ${{ secrets.WORK_DIR }}  && git pull origin main"
 
-      - name: Set up DVC
-        run: |
-          pip install dvc dvc-gdrive
-
+      - name: Check IP
+        run: hostname -i
 
       - name: Set up Gdrive
         env:
@@ -63,10 +61,17 @@ jobs:
         run: |
           pip install -r ./web/requirements.txt
 
+     
+      - name: Set up DVC
+        run: |
+          pip install dvc dvc-gdrive
+        
+
       - name: Pull data from DVC
         run: |
+            hostname -i
             dvc pull -r myremote  
-            
+
       - name: Start FastAPI for ai
         run: |
           nohup uvicorn main:app --reload &
