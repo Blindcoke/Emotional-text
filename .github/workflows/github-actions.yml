@@ -28,7 +28,7 @@ jobs:
 
       - name: Connect ssh
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@3.91.2.203 
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@3.91.2.203 '
           cd ${{ secrets.WORK_DIR }}  && git pull origin main
 
       - name: Check IP
