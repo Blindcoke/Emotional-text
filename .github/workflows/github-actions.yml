@@ -38,10 +38,10 @@ jobs:
 
       - name: Connect ssh
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@52.3.230.197 '
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@52.3.230.197 \'
           cd ${{ secrets.WORK_DIR }}  && git pull origin main
           export PATH="$PATH:/home/ubuntu/.local/bin"
-          GDRIVE_CREDENTIALS="${{ secrets.GDRIVE_CREDENTIALS }}"
+          GDRIVE_CREDENTIALS='${{ secrets.GDRIVE_CREDENTIALS }}'
           echo "$GDRIVE_CREDENTIALS" > gdrive_credentials.json
           pip install -r ./ai/requirements.txt
           pip install -r ./web/requirements.txt
@@ -58,7 +58,7 @@ jobs:
           until $(curl --output /dev/null --silent --head --fail http://localhost:8080); do
             sleep 1
           done
-          pytest'
+          pytest\'
 
 
       # - name: Set up Gdrive
