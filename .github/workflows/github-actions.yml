@@ -26,7 +26,7 @@ jobs:
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
 
-      - name: Deploy code
+      - name: Connect ssh
         run: ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@3.91.2.203 "cd ${{ secrets.WORK_DIR }}  && git pull origin main"
 
       - name: Set up DVC
@@ -57,7 +57,6 @@ jobs:
             ${{ runner.os }}-pip-
 
       - name: Install AI dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
         run: |
           pip install -r ./ai/requirements.txt
 
@@ -67,14 +66,14 @@ jobs:
           pip install -r ./web/requirements.txt
 
 
-      - name: Start FastAPI server for 'ai' application
+      - name: Start FastAPI for ai
         run: |
           nohup uvicorn main:app --reload &
           while ! nc -z localhost 8000; do sleep 1; done
         working-directory: ./ai
 
         
-      - name: Start FastAPI server for 'web' application
+      - name: Start FastAPI for web
         run: |
           nohup uvicorn web:app --port 8080 --reload &
           while ! nc -z localhost 8080; do sleep 1; done
