@@ -37,30 +37,29 @@ jobs:
 
 
       - name: Connect ssh
+        env:
+            GDRIVE_CREDENTIALS: ${{ secrets.GDRIVE_CREDENTIALS }}
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@52.3.230.197 '
           cd ${{ secrets.WORK_DIR }}  && git pull origin main
           export PATH='$PATH:/home/ubuntu/.local/bin'
-          cat gdrive_credentials.json
-          # echo "${{ secrets.GDRIVE_CREDENTIALS }}" > gdrive_credentials.json
-
-          # pip install -r ./ai/requirements.txt
-          # pip install -r ./web/requirements.txt
-          # dvc remote modify myremote gdrive_use_service_account true
-          # dvc remote modify myremote --local gdrive_service_account_json_file_path gdrive_credentials.json
-          # dvc pull -r myremote
-          # cd ai
-          # uvicorn main:app --reload &
-          # until $(curl --output /dev/null --silent --head --fail http://localhost:8000); do
-          # sleep 1
-          # done
-          # cd ../web
-          # uvicorn web:app --port 8080 --reload &
-          # until $(curl --output /dev/null --silent --head --fail http://localhost:8080); do
-          #   sleep 1
-          # done
-          # pytest
-          '
+          echo "$GDRIVE_CREDENTIALS" > gdrive_credentials.json
+          pip install -r ./ai/requirements.txt
+          pip install -r ./web/requirements.txt
+          dvc remote modify myremote gdrive_use_service_account true
+          dvc remote modify myremote --local gdrive_service_account_json_file_path gdrive_credentials.json
+          dvc pull -r myremote
+          cd ai
+          uvicorn main:app --reload &
+          until $(curl --output /dev/null --silent --head --fail http://localhost:8000); do
+          sleep 1
+          done
+          cd ../web
+          uvicorn web:app --port 8080 --reload &
+          until $(curl --output /dev/null --silent --head --fail http://localhost:8080); do
+            sleep 1
+          done
+          pytest'
 
 
       # - name: Set up Gdrive
