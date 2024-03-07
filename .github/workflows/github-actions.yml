@@ -18,7 +18,7 @@ jobs:
       - name: Run Black
         run: |
           pip install black
-          black ./ai/main.py ./web/web.py ./web/test_web.py
+          black ./ai/main.py ./web/web.py ./web/test_web.py 
 
       - name: Set up SSH
         run: |
@@ -26,71 +26,83 @@ jobs:
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
 
+      # - name: Cache pip packages
+      #   uses: actions/cache@v1
+      #   with:
+      #     path: ~/.cache/pip
+      #     key: ${{ runner.os }}-pip-${{ hashFiles('**/ai/requirements.txt') }} 
+      #     restore-keys: |
+      #       ${{ runner.os }}-pip-
+
       - name: Connect ssh
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@3.91.2.203 '
           cd ${{ secrets.WORK_DIR }}  && git pull origin main
-
-      - name: Check IP
-        run: hostname -i
-
-      - name: Set up Gdrive
-        env:
-          GDRIVE_CREDENTIALS: ${{ secrets.GDRIVE_CREDENTIALS }}
-        run: echo "$GDRIVE_CREDENTIALS" > gdrive_credentials.json
-    
- 
-
-      - name: Cache pip packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/ai/requirements.txt') }} 
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      - name: Install AI dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: |
+          echo "$GDRIVE_CREDENTIALS" > gdrive_credentials.json
           pip install -r ./ai/requirements.txt
-
-        
-      - name: Install Web dependencies
-        run: |
           pip install -r ./web/requirements.txt
-
-     
-      - name: Set up DVC
-        run: |
           pip install dvc dvc-gdrive
-      
-      - name: Configure DVC Remote
-        run: | 
           dvc remote modify myremote gdrive_use_service_account true
           dvc remote modify myremote --local gdrive_service_account_json_file_path gdrive_credentials.json
-
-      - name: Pull data from DVC
-        run: |
-            hostname -i
-            dvc pull -r myremote  
-
-      - name: Start FastAPI for ai
-        run: |
+          dvc pull -r myremote
+          cd /ai
           nohup uvicorn main:app --reload &
           while ! nc -z localhost 8000; do sleep 1; done
-        working-directory: ./ai
-
-        
-      - name: Start FastAPI for web
-        run: |
+          cd ../web
           nohup uvicorn web:app --port 8080 --reload &
           while ! nc -z localhost 8080; do sleep 1; done
-        working-directory: ./web
-  
-      - name: Run tests
-        run: pytest
+          pytest'
 
-      - name: cleanup
-        run: rm -rf ~/.ssh
+
+      # - name: Set up Gdrive
+      #   env:
+      #     GDRIVE_CREDENTIALS: ${{ secrets.GDRIVE_CREDENTIALS }}
+      #   run: |
+      #     echo "$GDRIVE_CREDENTIALS" > gdrive_credentials.json
+    
+
+      # - name: Install AI dependencies
+      #   if: steps.cache.outputs.cache-hit != 'true'
+      #   run: |
+      #     pip install -r ./ai/requirements.txt
+
+        
+      # - name: Install Web dependencies
+      #   run: |
+      #     pip install -r ./web/requirements.txt
+
+     
+      # - name: Set up DVC
+      #   run: |
+      #     pip install dvc dvc-gdrive
+      
+      # - name: Configure DVC Remote
+      #   run: | 
+      #     dvc remote modify myremote gdrive_use_service_account true
+      #     dvc remote modify myremote --local gdrive_service_account_json_file_path gdrive_credentials.json
+
+      # - name: Pull data from DVC
+      #   run: |
+      #       hostname -i
+      #       dvc pull -r myremote  
+
+      # - name: Start FastAPI for ai
+      #   run: |
+      #     nohup uvicorn main:app --reload &
+      #     while ! nc -z localhost 8000; do sleep 1; done
+      #   working-directory: ./ai
+
+        
+      # - name: Start FastAPI for web
+      #   run: |
+      #     nohup uvicorn web:app --port 8080 --reload &
+      #     while ! nc -z localhost 8080; do sleep 1; done
+      #   working-directory: ./web
+  
+      # - name: Run tests
+      #   run: pytest
+
+      # - name: cleanup
+      #   run: rm -rf ~/.ssh
 
       
