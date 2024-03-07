@@ -41,8 +41,9 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@52.3.230.197 '
           cd ${{ secrets.WORK_DIR }}  && git pull origin main
           export PATH='$PATH:/home/ubuntu/.local/bin'
-          
+
           # echo "${{ secrets.GDRIVE_CREDENTIALS }}" > gdrive_credentials.json
+          cat gdrive_credentials.json
           pip install -r ./ai/requirements.txt
           pip install -r ./web/requirements.txt
           dvc remote modify myremote gdrive_use_service_account true
