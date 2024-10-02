@@ -38,8 +38,8 @@ This project is an emotion recognition web application powered by FastAPI for th
 2. Ensure your NVIDIA drivers and Docker are configured properly for GPU acceleration.
 3. Build and start the containers using docker-compose:
 
-```bash
-docker-compose up --build
+   ```bash
+   docker-compose up --build
 This will build the containers for the AI model and web services, and expose the application on port 80.
 
 ## Docker Services
